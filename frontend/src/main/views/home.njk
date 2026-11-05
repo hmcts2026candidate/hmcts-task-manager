@@ -1,0 +1,30 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% extends "template.njk" %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">Task Manager</h1>
+
+  {{ govukButton({
+    text: "Add new task",
+    href: "/tasks/create"
+  }) }}
+
+  {% if tasks.length == 0 %}
+    <p class="govuk-body">No tasks found. Create one to get started.</p>
+  {% else %}
+    {{ govukTable({
+      head: [
+        { text: "Title" },
+        { text: "Description" },
+        { text: "Status" },
+        { text: "Due Date" },
+        { text: "Actions" }
+      ],
+      rows: tasks | taskRows
+    }) }}
+  {% endif %}
+
+{% endblock %}

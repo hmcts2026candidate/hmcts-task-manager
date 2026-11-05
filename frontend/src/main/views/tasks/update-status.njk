@@ -1,0 +1,45 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "template.njk" %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">Update task status</h1>
+
+  <dl class="govuk-summary-list govuk-!-margin-bottom-6">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Title</dt>
+      <dd class="govuk-summary-list__value">{{ task.title }}</dd>
+    </div>
+    {% if task.description %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Description</dt>
+      <dd class="govuk-summary-list__value">{{ task.description }}</dd>
+    </div>
+    {% endif %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Current status</dt>
+      <dd class="govuk-summary-list__value">{{ task.status }}</dd>
+    </div>
+  </dl>
+
+  <form method="post" action="/tasks/{{ task.id }}/status" novalidate>
+
+    {{ govukSelect({
+      label: { text: "New status", classes: "govuk-label--m" },
+      id: "status",
+      name: "status",
+      items: [
+        { value: "TODO", text: "To Do", selected: task.status === "TODO" },
+        { value: "IN_PROGRESS", text: "In Progress", selected: task.status === "IN_PROGRESS" },
+        { value: "DONE", text: "Done", selected: task.status === "DONE" }
+      ]
+    }) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({ text: "Update status" }) }}
+      <a href="/" class="govuk-link">Cancel</a>
+    </div>
+
+  </form>
+{% endblock %}
