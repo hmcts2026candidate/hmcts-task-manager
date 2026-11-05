@@ -9,10 +9,10 @@
 {% block content %}
   <h1 class="govuk-heading-xl">Create new task</h1>
 
-  {% if errors and errors | length %}
+  {% if errorList and errorList.length %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: []
+      errorList: errorList
     }) }}
   {% endif %}
 
@@ -23,6 +23,7 @@
       hint: { text: "A short name for the task" },
       id: "title",
       name: "title",
+      value: values.title,
       errorMessage: errors.title and { text: errors.title[0] }
     }) }}
 
@@ -30,7 +31,9 @@
       label: { text: "Description (optional)", classes: "govuk-label--m" },
       hint: { text: "Any additional detail about the task" },
       id: "description",
-      name: "description"
+      name: "description",
+      value: values.description,
+      errorMessage: errors.description and { text: errors.description[0] }
     }) }}
 
     {{ govukSelect({
@@ -38,17 +41,18 @@
       id: "status",
       name: "status",
       items: [
-        { value: "TODO", text: "To Do", selected: true },
-        { value: "IN_PROGRESS", text: "In Progress" },
-        { value: "DONE", text: "Done" }
+        { value: "TODO", text: "To Do", selected: not values.status or values.status == "TODO" },
+        { value: "IN_PROGRESS", text: "In Progress", selected: values.status == "IN_PROGRESS" },
+        { value: "DONE", text: "Done", selected: values.status == "DONE" }
       ]
     }) }}
 
     {{ govukInput({
       label: { text: "Due date and time", classes: "govuk-label--m" },
-      hint: { text: "For example, 2024-12-31T17:00" },
+      hint: { text: "Enter both a date and a time" },
       id: "dueDate",
       name: "dueDate",
+      value: values.dueDate,
       type: "datetime-local",
       errorMessage: errors.dueDate and { text: errors.dueDate[0] }
     }) }}
